@@ -1,0 +1,54 @@
+/*
+4.times {
+    println "$it ->"
+}
+*/
+
+task hello {
+    doFirst {
+        println 'task start1:'
+    }
+    doFirst {
+        println 'task start2:'
+    }
+    doLast {
+        println 'taks end1'
+    }
+    doLast {
+        println 'taks end2'
+    }
+    doFirst {
+        println 'task start3:'
+    }
+    println 'Hello world!'
+}
+
+hello << {
+    println 'taks end3'
+}
+
+task hello2(dependsOn: hello) {
+    println 'Hello world 2!'
+}
+
+task count {
+    4.times { print "{$it}" }
+}
+count.doFirst {
+    println 'count doFirst'
+}
+
+task hello3 << {
+    println 'Hello world3!'
+}
+
+task loadfile << {
+    def files = file('./antLoadfileResources').listFiles().sort()
+    files.each { File file ->
+        if (file.isFile()) {
+            ant.loadfile(srcFile: file, property: file.name)
+            println " *** $file.name ***"
+            println "${ant.properties[file.name]}"
+        }
+    }
+}
